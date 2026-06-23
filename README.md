@@ -57,7 +57,27 @@ SMTP_PASSWORD=your_app_password
 ```
 
 ## 🏃 How to Run
+```
 
+## ☁️ Streamlit Cloud Deployment
+
+This project is optimized for [Streamlit Cloud](https://streamlit.io/cloud).
+
+### 1. Push to GitHub
+Ensure all changes (including `requirements.txt`) are pushed to your repository.
+
+### 2. Connect to Streamlit Cloud
+- Go to [share.streamlit.io](https://share.streamlit.io).
+- Select your repository and the `main` branch.
+- Set the Main file path to `app.py`.
+
+### 3. Configure Secrets
+In the Streamlit Cloud dashboard, go to **Settings > Secrets** and add your Groq API Key:
+```toml
+GROQ_API_KEY = "your_actual_key_here"
+```
+
+The app will automatically detect that it's running on the cloud and use **Direct Execution Mode** (bypassing the need for a separate FastAPI process).
 To run the full system, you need to start both the **Backend** and the **Frontend**.
 
 ### 1. Start the FastAPI Backend
