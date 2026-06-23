@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 # Import Phase functions for direct fallback (Streamlit Cloud Deployment)
-from Phase1_Data_Acquisition.scraper import scrape_reviews
+from Phase1_Data_Acquisition.scraper import scrape_all_sources
 from Phase2_Data_Processing.processor import process_reviews
 from Phase3_Theme_Generation.theme_engine import run_phase_3
 from Phase4_Synthesis_Reporting.reporter import generate_report
@@ -61,7 +61,7 @@ st.markdown("""
 def run_full_pipeline_directly():
     with st.status("🚀 Running Discovery Pipeline...", expanded=True) as status:
         st.write("Fetching reviews...")
-        scrape_reviews(target_count=500)
+        scrape_all_sources(target_total=500)
         st.write("Cleaning and filtering...")
         process_reviews()
         st.write("Generating AI themes...")
