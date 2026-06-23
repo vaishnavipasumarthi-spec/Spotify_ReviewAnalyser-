@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+data/
+reports/
+.DS_Store
+.venv/
+env/
+venv/
+node_modules/
+.streamlit/
+*.log
