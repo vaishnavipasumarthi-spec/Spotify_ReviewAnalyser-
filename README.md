@@ -24,7 +24,6 @@ graph LR
 - **AI Analysis**: Powered by Groq (Llama-3.3-70b & Llama-3.1-8b).
 - **Strict Filtering**: Only keeps English reviews (90%+ confidence) and removes PII.
 - **Weekly Reports**: Generates a markdown "Weekly Note" with top themes, user quotes, and action ideas.
-- **Email Drafts**: Prepares email reports for internal distribution.
 
 ## 🏗️ Architecture
 
