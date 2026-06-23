@@ -9,7 +9,7 @@ This tool automates the process of understanding user feedback. It scrapes live 
 ### User Flow
 ```mermaid
 graph LR
-    User --> Streamlit
+    Sources[Play Store, Reddit, Forums, Social] --> Streamlit
     Streamlit --> FastAPI
     FastAPI --> Scraper
     Scraper --> Processor
@@ -27,7 +27,7 @@ graph LR
 
 ## 🏗️ Architecture
 
-1.  **Phase 1: Data Acquisition**: Scrapes latest reviews via `google-play-scraper`.
+1.  **Phase 1: Data Acquisition**: Scrapes latest reviews from Play Store, Reddit, and Forums.
 2.  **Phase 2: Data Preprocessing**: Cleans PII and filters for strict English.
 3.  **Phase 3: Theme Generation**: AI identifies top 6 product themes and categorizes reviews.
 4.  **Phase 4: Synthesis**: Generates the Weekly Discovery Note.

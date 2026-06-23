@@ -6,12 +6,19 @@ The Spotify Review Discovery Engine is an automated pipeline designed to scrap, 
 ## 2. User Flow Diagram
 ```mermaid
 graph TD
-    User((User)) -->|Triggers Analysis| UI[Streamlit Dashboard]
+    subgraph "Data Sources"
+        S1[Google Play Store]
+        S2[Reddit Discussions]
+        S3[Community Forums]
+        S4[Social Media]
+    end
+
+    S1 & S2 & S3 & S4 -->|Raw Data| UI[Streamlit Dashboard]
     UI -->|POST /analyze| API[FastAPI Backend]
     
     subgraph "Background Pipeline"
-        API -->|Run| P1[Phase 1: Scraper]
-        P1 -->|Raw Data| P2[Phase 2: Processor]
+        API -->|Run| P1[Phase 1: Multi-Source Scraper]
+        P1 -->|Consolidated JSON| P2[Phase 2: Processor]
         P2 -->|Clean Data| P3[Phase 3: Theme Engine]
         P3 -->|Themes & Groups| P4[Phase 4: Reporter]
     end
@@ -25,15 +32,19 @@ graph TD
 
 ## 3. Phase-Wise Architecture
 
-### Phase 1: Data Acquisition (Scraper)
+### Phase 1: Data Acquisition (Multi-Source Scraper)
 - **Component**: `scraper.py`
-- **Input**: Google Play App ID (com.spotify.music).
+- **Sources**: 
+    - **Google Play Store**: App reviews via `google-play-scraper`.
+    - **Reddit**: Subreddit discussions (e.g., r/spotify) via PRAW.
+    - **Community Forums**: Spotify Community threads.
+    - **Social Media**: Filtered conversations/mentions.
+- **Input**: App IDs, Subreddits, Keywords.
 - **Process**: 
-    - Fetch reviews using `google-play-scraper`.
+    - Fetch and consolidate data into a unified format.
     - Filter by date (last 8-12 weeks).
-    - Capture: `rating`, `title`, `text`, `date`.
-    - Limit: 500 reviews.
-- **Output**: `data/raw_reviews.json`
+    - Limit: 500 records per source.
+- **Output**: `data/raw_reviews.json` (Unified Schema)
 
 ### Phase 2: Data Preprocessing
 - **Component**: `processor.py`
