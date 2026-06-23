@@ -57,8 +57,6 @@ SMTP_PASSWORD=your_app_password
 ```
 
 ## 🏃 How to Run
-```
-
 ## ☁️ Streamlit Cloud Deployment
 
 This project is optimized for [Streamlit Cloud](https://streamlit.io/cloud).
@@ -78,7 +76,9 @@ GROQ_API_KEY = "your_actual_key_here"
 ```
 
 The app will automatically detect that it's running on the cloud and use **Direct Execution Mode** (bypassing the need for a separate FastAPI process).
-To run the full system, you need to start both the **Backend** and the **Frontend**.
+
+### Local Execution Guide
+To run the full system locally... (see below)
 
 ### 1. Start the FastAPI Backend
 ```bash
