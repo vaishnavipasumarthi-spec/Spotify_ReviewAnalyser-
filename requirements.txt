@@ -8,3 +8,4 @@ google-play-scraper
 langdetect
 pandas
 tqdm
+beautifulsoup4
