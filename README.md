@@ -32,8 +32,7 @@ graph LR
 2.  **Phase 2: Data Preprocessing**: Cleans PII and filters for strict English.
 3.  **Phase 3: Theme Generation**: AI identifies top 6 product themes and categorizes reviews.
 4.  **Phase 4: Synthesis**: Generates the Weekly Discovery Note.
-5.  **Phase 5: Email Automation**: Drafts the note into an email.
-6.  **Phase 7 & 8**: Decoupled REST API (FastAPI) and Interactive Dashboard (Streamlit).
+5.  **Phase 7 & 8**: Decoupled REST API (FastAPI) and Interactive Dashboard (Streamlit).
 
 ## 🛠️ Setup & Installation
 
