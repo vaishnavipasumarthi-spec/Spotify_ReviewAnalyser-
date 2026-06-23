@@ -1,0 +1,10 @@
+streamlit
+fastapi
+uvicorn
+requests
+groq
+python-dotenv
+google-play-scraper
+langdetect
+pandas
+tqdm

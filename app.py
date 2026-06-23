@@ -4,8 +4,14 @@ import json
 import os
 from datetime import datetime
 
+# Import Phase functions for direct fallback (Streamlit Cloud Deployment)
+from Phase1_Data_Acquisition.scraper import scrape_reviews
+from Phase2_Data_Processing.processor import process_reviews
+from Phase3_Theme_Generation.theme_engine import run_phase_3
+from Phase4_Synthesis_Reporting.reporter import generate_report
+
 # API Configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 # Page Configuration
 st.set_page_config(
@@ -48,17 +54,21 @@ st.markdown("""
         margin-bottom: 1rem;
         font-style: italic;
     }
-    .nav-nudge {
-        background-color: #1DB954;
-        color: white;
-        padding: 10px;
-        border-radius: 10px;
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-    }
 </style>
 """, unsafe_allow_html=True)
+
+# Direct execution helper
+def run_full_pipeline_directly():
+    with st.status("🚀 Running Discovery Pipeline...", expanded=True) as status:
+        st.write("Fetching reviews...")
+        scrape_reviews(target_count=500)
+        st.write("Cleaning and filtering...")
+        process_reviews()
+        st.write("Generating AI themes...")
+        run_phase_3()
+        st.write("Synthesizing report...")
+        generate_report()
+        status.update(label="✅ Analysis Complete!", state="complete", expanded=False)
 
 # Sidebar - Nudges/Navigation
 st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg", width=50)
@@ -76,47 +86,67 @@ st.sidebar.markdown("---")
 # Trigger Button
 if st.sidebar.button("🚀 Trigger New Analysis", use_container_width=True):
     try:
-        response = requests.post(f"{API_BASE_URL}/analyze", json={"limit": 500})
+        # Try calling the FastAPI backend first (Local mode)
+        response = requests.post(f"{API_BASE_URL}/analyze", json={"limit": 500}, timeout=2)
         if response.status_code == 200:
-            st.sidebar.success("Analysis triggered! Running in background...")
+            st.sidebar.success("Analysis triggered via API!")
         else:
-            st.sidebar.error("Failed to trigger analysis.")
-    except Exception as e:
-        st.sidebar.error(f"Connection error: {e}")
+            st.sidebar.info("API unavailable. Running directly...")
+            run_full_pipeline_directly()
+            st.rerun()
+    except:
+        # Fallback to direct execution (Streamlit Cloud mode)
+        st.sidebar.info("Local API not detected. Running directly on cloud...")
+        run_full_pipeline_directly()
+        st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Backend: FastAPI | Frontend: Streamlit")
+st.sidebar.caption("Dual-Mode: Local API & Cloud Native")
 
 # Main Header
 st.markdown('<div class="main-header">Discovery Engine Insights</div>', unsafe_allow_html=True)
 
-# Fetch Data from API
-def fetch_data():
+# Fetch Data helper (Handles both API and Local File fallback)
+def load_analysis_data():
+    # Try API first
     try:
-        res = requests.get(f"{API_BASE_URL}/results")
+        res = requests.get(f"{API_BASE_URL}/results", timeout=2)
         if res.status_code == 200:
-            return res.json()
-        return None
+            return res.json(), "API"
     except:
-        return None
+        pass
+    
+    # Fallback to local files
+    path = "data/themed_reviews.json"
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f), "FILE"
+    return None, None
 
-def fetch_report():
+def load_report_content():
+    # Try API first
     try:
-        res = requests.get(f"{API_BASE_URL}/report")
+        res = requests.get(f"{API_BASE_URL}/report", timeout=2)
         if res.status_code == 200:
-            return res.json()['content']
-        return None
+            return res.json()['content'], "API"
     except:
-        return None
+        pass
+    
+    # Fallback to local files
+    path = "reports/weekly_note.md"
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read(), "FILE"
+    return None, None
 
-data = fetch_data()
+data, source = load_analysis_data()
 
 if data:
     reviews = data['grouped_reviews']
     total_reviews = len(reviews)
     avg_rating = sum([r['rating'] for r in reviews]) / total_reviews if total_reviews > 0 else 0
-
-    # Top Metrics (Always visible)
+    
+    # Metrics Row
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="metric-card"><h3>Total Analyzed</h3><h1 style="color:#1DB954">{total_reviews}</h1></div>', unsafe_allow_html=True)
@@ -129,15 +159,15 @@ if data:
 
     # Handle Navigation Nudges
     if navigation == "📝 Latest Weekly Note":
-        report_content = fetch_report()
+        report_content, r_source = load_report_content()
         if report_content:
-            st.subheader("📄 Latest Weekly Note Preview")
+            st.subheader(f"📄 Latest Weekly Note (Source: {r_source})")
             st.markdown(report_content)
         else:
             st.warning("Weekly report not available yet. Please trigger an analysis.")
 
     elif navigation == "🔍 Deep Dive by Themes":
-        st.subheader("🔍 Deep Dive: Exploring Themes")
+        st.subheader(f"🔍 Deep Dive: Exploring Themes (Source: {source})")
         selected_theme = st.selectbox("Select a theme to explore detailed feedback:", data['themes'])
         
         theme_reviews = [r for r in reviews if r['theme'] == selected_theme]
@@ -152,4 +182,4 @@ else:
 
 # Footer
 st.markdown("---")
-st.caption("Produced by Antigravity Spotify Review discovery Engine")
+st.caption("Produced by Antigravity Spotify Review Discovery Engine")
