@@ -15,8 +15,7 @@ graph LR
     Scraper --> Processor
     Processor --> Theme_Engine
     Theme_Engine --> Reporter
-    Reporter --> Mailer
-    Mailer --> FastAPI
+    Reporter --> FastAPI
     FastAPI --> Streamlit
 ```
 

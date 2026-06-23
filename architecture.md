@@ -14,10 +14,9 @@ graph TD
         P1 -->|Raw Data| P2[Phase 2: Processor]
         P2 -->|Clean Data| P3[Phase 3: Theme Engine]
         P3 -->|Themes & Groups| P4[Phase 4: Reporter]
-        P4 -->|Weekly Note| P5[Phase 5: Mailer]
     end
     
-    P5 -->|Draft Sent| API
+    P4 -->|Weekly Note| API
     
     User -->|Views Insights| UI
     UI -->|GET /results & /report| API
@@ -65,8 +64,6 @@ graph TD
     - Extract 3 high-impact user quotes per theme.
     - Generate 3 "Action Ideas" based on LLM inference.
 - **Output**: `reports/weekly_note.md`
-
-
 
 ### Phase 7: Backend API (FastAPI) [NEW]
 - **Component**: `backend/main.py`
