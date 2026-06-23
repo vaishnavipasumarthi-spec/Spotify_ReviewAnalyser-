@@ -66,11 +66,7 @@ graph TD
     - Generate 3 "Action Ideas" based on LLM inference.
 - **Output**: `reports/weekly_note.md`
 
-### Phase 5: Distribution (Email)
-- **Component**: `mailer.py`
-- **Process**: 
-    - Format the `weekly_note.md` into an email body.
-    - Send via SMTP (App Passwords) or Mailgun/SendGrid.
+
 
 ### Phase 7: Backend API (FastAPI) [NEW]
 - **Component**: `backend/main.py`

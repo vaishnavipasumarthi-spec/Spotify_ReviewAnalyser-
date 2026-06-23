@@ -31,8 +31,6 @@ def trigger_analysis(background_tasks: BackgroundTasks, request: AnalyzeRequest 
             subprocess.run(["python", "Phase3_Theme_Generation/theme_engine.py"], check=True)
             # Phase 4: Reporter
             subprocess.run(["python", "Phase4_Synthesis_Reporting/reporter.py"], check=True)
-            # Phase 5: Mailer
-            subprocess.run(["python", "Phase5_Email_Automation/mailer.py"], check=True)
             print("Pipeline completed via FastAPI background task.")
         except Exception as e:
             print(f"Pipeline error: {e}")
