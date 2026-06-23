@@ -58,7 +58,13 @@ def generate_report():
             ideas = response.get('action_ideas', response.get('ideas', list(response.values())[0]))
         except Exception as e:
             print(f"Error generating ideas for {theme}: {e}")
-            ideas = ["Action idea generation failed.", "Review feedback manually.", "Consult product roadmap."]
+            ideas = ["Review feedback manually for insights.", "Consult the product roadmap for alignment.", "Monitor user sentiment carefully."]
+            
+        # Ensure ideas is a list of strings (Fix for S-t-a rendering bug)
+        if isinstance(ideas, str):
+            ideas = [ideas]
+        elif not isinstance(ideas, list):
+            ideas = [str(ideas)]
             
         report_content += f"## Theme: {theme}\n\n"
         report_content += "### Top 3 User Quotes\n"
