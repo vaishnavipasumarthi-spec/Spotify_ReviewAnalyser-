@@ -175,7 +175,8 @@ if data:
         
         for r in theme_reviews[:15]:
             st.markdown(f'<div class="quote-box">"{r["text"]}"</div>', unsafe_allow_html=True)
-            st.caption(f"Rating: {r['rating']} ★ | Date: {r['date'].split('T')[0]}")
+            source_tag = r.get('source', 'Google Play Store')
+            st.caption(f"Rating: {r['rating']} ★ | Date: {r['date'].split('T')[0]} | Source: {source_tag}")
 else:
     st.info("👋 Welcome! No analysis data found. Use the 'Trigger New Analysis' button in the sidebar to start.")
     st.image("https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=1500")

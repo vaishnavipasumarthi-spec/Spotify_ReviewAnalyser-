@@ -72,6 +72,7 @@ def process_reviews():
             'rating': r['rating'],
             'text': cleaned_text,
             'date': r['date'],
+            'source': r.get('source', 'Google Play Store'),
             'is_pii_clean': True,
             'word_count': word_count
         })
